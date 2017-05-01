@@ -16,9 +16,8 @@ I don't know.
 
 - A bunch of Beck lyrics copied from around the internet (`/api/beck.txt`)
 - A thing to parse a file full of `\n`-separated lyrics into json (`/api/parser.js`)
-- The parsed result of `beck.txt` into json (`/api/beck.txt.json`)
-- A web service so we may be able to visualize it all (`/api/index.js`)
-- At some point, perhaps a UI for this?
+- A thing to view the tags of those parsed lyrics
+- In the future, maybe more interesting things
 
 ## Why did you do this?
 
@@ -31,4 +30,5 @@ cool with it for the time being, though.
 
 ## How do I use it?
 
-You don't. I'll host it. Sorry.
+For now, this is all there is. Maybe someday there will be more!
+I don't know for sure!

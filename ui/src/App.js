@@ -1,79 +1,74 @@
-import React, { Component } from 'react'
-import './App.css'
+import React, { Component } from "react";
+import "./App.css";
+import beck from "./beck.json";
+import defs from "./pos.json";
 
-const most = (freqs) => Object.entries(freqs).reduce((m, entry) => {
-  if (entry[1] > m.value) {
-    m.key = entry[0]
-    m.value = entry[1]
-  }
-  return m
-}, { key: '', value: 0 })
+const POSTag = props => {
+  if (!props.tag) return null;
+  if (!props.desc) return null;
+  if (!props.example) return null;
+  return (
+    <div className="Tag">
+      <p className="Tag-example">{props.example}</p>
+      <p className="Tag-name">{props.tag}</p>
+      <p className="Tag-desc">{props.desc}</p>
+    </div>
+  );
+};
 
-const Tag = (props) =>
-  <div className='Tag'>
-    <p className='Tag-example'>{props.example}</p>
-    <p className='Tag-name'>{props.name}</p>
-    <p className='Tag-desc'>{props.desc}</p>
-  </div>
-
-const TagList = (props) => {
-  let key = 0
-  const t = props.tags
-    .filter((tag) => tag !== '')
-    .map((tag) => <Tag name={tag} desc={props.defs[tag]} key={key++} example={props.example} />)
-  return <div className='TagList'>{t}</div>
-}
-
-const Frequencies = (props) => {
-  const mostFreq = most(props.data)
-
-  return <div className='Frequencies'>
-    <h4>MOST FREQUENT PATTERN:</h4>
-    <TagList tags={mostFreq.key.split('_')} {...props} />
-    <p>{`@ ${mostFreq.value}`}</p>
-  </div>
-}
-
-const Lyrics = (props) => <div></div>
+const Lyric = props => {
+  if (!props.lyric) return null;
+  return (
+    <div className="Lyric">
+      <h4><em>{props.lyric.line}</em></h4>
+      <h5>{props.lyric.tags.join(" | ")}</h5>
+      {props.lyric.pairs.map(tagPair => (
+        <POSTag
+          tag={tagPair[1]}
+          example={tagPair[0]}
+          desc={props.descriptions[tagPair[1]]}
+        />
+      ))}
+    </div>
+  );
+};
 
 class App extends Component {
-  apiRoot = 'http://localhost:8080'
   state = {
-    lyrics: [],
-    frequencies: [],
-    tags: {}
-  }
-
-  componentDidMount() {
-    fetch(this.apiRoot + '/lyrics/tagged').then((b) => b.json()).then((t) => {
-      this.setState({
-        lyrics: t
-      })
-    })
-    fetch(this.apiRoot + '/lyrics/tagged/frequencies').then((b) => b.json()).then((f) => {
-      this.setState({
-        frequencies: f
-      })
-    })
-    fetch(this.apiRoot + '/pos/tags').then((b) => b.json()).then((t) => {
-      this.setState({
-        tags: t
-      })
-    })
-  }
+    lyrics: beck.lyrics,
+    frequencies: beck.frequencies,
+    tags: defs
+  };
 
   render() {
     return (
       <div className="App">
         <div className="App-header">
           <h2>WHERE IT'S AT</h2>
-          <h3>a celebration of language</h3>
+          <h3>
+            a celebration of the wacky language of
+            {" "}
+            <a href="https://en.wikipedia.org/wiki/Beck">Beck</a>
+          </h3>
+          <p>
+            <em>
+              I analyzed popular-ish Beck lyrics with a part-of-speech tagger, and mapped them out.
+            </em>
+          </p>
+          <p>
+            These methods could be used on any corpus of newline-separated lyrics by any artist. But, to start out, I'm using Beck.
+          </p>
         </div>
         <p className="App-intro">
           k, here goes.
         </p>
-        <Frequencies data={this.state.frequencies} defs={this.state.tags} />
-        <Lyrics data={this.state.lyrics} />
+        {this.state.lyrics.map(lyric => (
+          <Lyric
+            lyric={lyric}
+            descriptions={this.state.tags}
+            key={encodeURI(lyric.line)}
+          />
+        ))}
       </div>
     );
   }

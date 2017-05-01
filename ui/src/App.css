@@ -2,11 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
 .App-header {
   background-color: #222;
   height: 150px;
@@ -18,17 +13,32 @@
   font-size: large;
 }
 
+.Tag {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.Tag .Tag-name,.Tag-desc,.Tag-example {
+  padding: .5rem;
+}
+
 .Tag .Tag-name{
-  display: inline-block;
-  padding: 1rem;
+  align-self: center;
+  background-color: steelblue;
+  color: ivory;
 }
 
 .Tag .Tag-desc {
   display: none;
+  background-color: goldenrod;
+}
+
+.Tag .Tag-example {
+  display: inline;
+  background-color: plum;
 }
 
 .Tag:hover .Tag-desc {
-  padding: .5rem;
-  background-color: goldenrod;
   display: inline;
 }
